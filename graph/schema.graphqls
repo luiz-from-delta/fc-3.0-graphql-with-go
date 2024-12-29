@@ -2,27 +2,140 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
-}
-
-type User {
+type Course {
   id: ID!
   name: String!
+  description: String
+
+  courseCategories: [CourseCategory!]!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String
+
+  courseCategories: [CourseCategory!]!
+}
+
+type CourseCategory {
+  courseId: ID!
+  course: Course
+
+  categoryId: ID!
+  category: Category
+}
+
+type Student {
+  id: ID!
+  name: String!
+  email: String!
+
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Subscription {
+  studentId: ID!
+  student: Student
+
+  courseId: ID!
+  course: Course
+
+  status: SubscriptionStatus!
+
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type Query {
-  todos: [Todo!]!
+  listCourses: [Course!]!
+  retrieveCourseById(courseId: ID!): Course
+
+  listCourseCategories: [CourseCategory!]!
+  retrieveCourseCategoryById(courseCategoryId: ID!): CourseCategory
+
+  listStudents: [Student!]!
+  retrieveStudentById(studentId: ID!): Student
+
+  listSubscriptions: [Subscription!]!
+  retrieveSubscriptionById(subscriptionId: ID!): Subscription
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+input CreateCourseInput {
+  name: String!
+  description: String
+  categories: [ID!]
+}
+
+input UpdateCourseInput {
+  name: String
+  description: String
+  categories: [ID!]
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+  courses: [ID!]
+}
+
+input UpdateCategoryInput {
+  name: String
+  description: String
+  courses: [ID!]
+}
+
+input CreateStudentInput {
+  name: String!
+  email: String!
+}
+
+input UpdateStudentInput {
+  name: String
+  email: String
+}
+
+input CreateSubscriptionInput {
+  studentId: ID!
+  courseId: ID!
+  status: SubscriptionStatus!
+}
+
+input UpdateSubscriptionInput {
+  status: SubscriptionStatus!
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  createCourse(createCourseInput: CreateCourseInput!): Course
+  updateCourse(courseId: ID!, updateCourseInput: UpdateCourseInput!): Course
+  deleteCourse(courseId: ID!): Course
+
+  createCategory(createCategoryInput: CreateCategoryInput!): Category
+  updateCategory(
+    categoryId: ID!
+    updateCategoryInput: UpdateCategoryInput!
+  ): Category
+  deleteCategory(categoryId: ID!): Category
+
+  createStudent(createStudentInput: CreateStudentInput!): Student
+  updateStudent(
+    studentId: ID!
+    updateStudentInput: UpdateStudentInput!
+  ): Student
+  deleteStudent(studentId: ID!): Student
+
+  createSubscription(
+    createSubscriptionInput: CreateSubscriptionInput!
+  ): Subscription
+  updateSubscription(
+    subscriptionId: ID!
+    updateSubscriptionInput: UpdateSubscriptionInput!
+  ): Subscription
+  deleteSubscription(subscriptionId: ID!): Subscription
 }

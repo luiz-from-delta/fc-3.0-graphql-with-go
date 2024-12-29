@@ -11,14 +11,139 @@ import (
 	"github.com/luiz-from-delta/fc-graphql-with-go/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateCourse is the resolver for the createCourse field.
+func (r *mutationResolver) CreateCourse(ctx context.Context, createCourseInput model.CreateCourseInput) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: CreateCourse - createCourse"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// UpdateCourse is the resolver for the updateCourse field.
+func (r *mutationResolver) UpdateCourse(ctx context.Context, courseID string, updateCourseInput model.UpdateCourseInput) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: UpdateCourse - updateCourse"))
+}
+
+// DeleteCourse is the resolver for the deleteCourse field.
+func (r *mutationResolver) DeleteCourse(ctx context.Context, courseID string) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: DeleteCourse - deleteCourse"))
+}
+
+// CreateCategory is the resolver for the createCategory field.
+func (r *mutationResolver) CreateCategory(ctx context.Context, createCategoryInput model.CreateCategoryInput) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: CreateCategory - createCategory"))
+}
+
+// UpdateCategory is the resolver for the updateCategory field.
+func (r *mutationResolver) UpdateCategory(ctx context.Context, categoryID string, updateCategoryInput model.UpdateCategoryInput) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: UpdateCategory - updateCategory"))
+}
+
+// DeleteCategory is the resolver for the deleteCategory field.
+func (r *mutationResolver) DeleteCategory(ctx context.Context, categoryID string) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: DeleteCategory - deleteCategory"))
+}
+
+// CreateStudent is the resolver for the createStudent field.
+func (r *mutationResolver) CreateStudent(ctx context.Context, createStudentInput model.CreateStudentInput) (*model.Student, error) {
+	panic(fmt.Errorf("not implemented: CreateStudent - createStudent"))
+}
+
+// UpdateStudent is the resolver for the updateStudent field.
+func (r *mutationResolver) UpdateStudent(ctx context.Context, studentID string, updateStudentInput model.UpdateStudentInput) (*model.Student, error) {
+	panic(fmt.Errorf("not implemented: UpdateStudent - updateStudent"))
+}
+
+// DeleteStudent is the resolver for the deleteStudent field.
+func (r *mutationResolver) DeleteStudent(ctx context.Context, studentID string) (*model.Student, error) {
+	panic(fmt.Errorf("not implemented: DeleteStudent - deleteStudent"))
+}
+
+// CreateSubscription is the resolver for the createSubscription field.
+func (r *mutationResolver) CreateSubscription(ctx context.Context, createSubscriptionInput model.CreateSubscriptionInput) (*model.Subscription, error) {
+	panic(fmt.Errorf("not implemented: CreateSubscription - createSubscription"))
+}
+
+// UpdateSubscription is the resolver for the updateSubscription field.
+func (r *mutationResolver) UpdateSubscription(ctx context.Context, subscriptionID string, updateSubscriptionInput model.UpdateSubscriptionInput) (*model.Subscription, error) {
+	panic(fmt.Errorf("not implemented: UpdateSubscription - updateSubscription"))
+}
+
+// DeleteSubscription is the resolver for the deleteSubscription field.
+func (r *mutationResolver) DeleteSubscription(ctx context.Context, subscriptionID string) (*model.Subscription, error) {
+	panic(fmt.Errorf("not implemented: DeleteSubscription - deleteSubscription"))
+}
+
+// ListCourses is the resolver for the listCourses field.
+func (r *queryResolver) ListCourses(ctx context.Context) ([]*model.Course, error) {
+	panic(fmt.Errorf("not implemented: ListCourses - listCourses"))
+}
+
+// RetrieveCourseByID is the resolver for the retrieveCourseById field.
+func (r *queryResolver) RetrieveCourseByID(ctx context.Context, courseID string) (*model.Course, error) {
+	panic(fmt.Errorf("not implemented: RetrieveCourseByID - retrieveCourseById"))
+}
+
+// ListCourseCategories is the resolver for the listCourseCategories field.
+func (r *queryResolver) ListCourseCategories(ctx context.Context) ([]*model.CourseCategory, error) {
+	panic(fmt.Errorf("not implemented: ListCourseCategories - listCourseCategories"))
+}
+
+// RetrieveCourseCategoryByID is the resolver for the retrieveCourseCategoryById field.
+func (r *queryResolver) RetrieveCourseCategoryByID(ctx context.Context, courseCategoryID string) (*model.CourseCategory, error) {
+	panic(fmt.Errorf("not implemented: RetrieveCourseCategoryByID - retrieveCourseCategoryById"))
+}
+
+// ListStudents is the resolver for the listStudents field.
+func (r *queryResolver) ListStudents(ctx context.Context) ([]*model.Student, error) {
+	panic(fmt.Errorf("not implemented: ListStudents - listStudents"))
+}
+
+// RetrieveStudentByID is the resolver for the retrieveStudentById field.
+func (r *queryResolver) RetrieveStudentByID(ctx context.Context, studentID string) (*model.Student, error) {
+	panic(fmt.Errorf("not implemented: RetrieveStudentByID - retrieveStudentById"))
+}
+
+// ListSubscriptions is the resolver for the listSubscriptions field.
+func (r *queryResolver) ListSubscriptions(ctx context.Context) ([]*model.Subscription, error) {
+	panic(fmt.Errorf("not implemented: ListSubscriptions - listSubscriptions"))
+}
+
+// RetrieveSubscriptionByID is the resolver for the retrieveSubscriptionById field.
+func (r *queryResolver) RetrieveSubscriptionByID(ctx context.Context, subscriptionID string) (*model.Subscription, error) {
+	panic(fmt.Errorf("not implemented: RetrieveSubscriptionByID - retrieveSubscriptionById"))
+}
+
+// StudentID is the resolver for the studentId field.
+func (r *subscriptionResolver) StudentID(ctx context.Context) (<-chan string, error) {
+	panic(fmt.Errorf("not implemented: StudentID - studentId"))
+}
+
+// Student is the resolver for the student field.
+func (r *subscriptionResolver) Student(ctx context.Context) (<-chan *model.Student, error) {
+	panic(fmt.Errorf("not implemented: Student - student"))
+}
+
+// CourseID is the resolver for the courseId field.
+func (r *subscriptionResolver) CourseID(ctx context.Context) (<-chan string, error) {
+	panic(fmt.Errorf("not implemented: CourseID - courseId"))
+}
+
+// Course is the resolver for the course field.
+func (r *subscriptionResolver) Course(ctx context.Context) (<-chan *model.Course, error) {
+	panic(fmt.Errorf("not implemented: Course - course"))
+}
+
+// Status is the resolver for the status field.
+func (r *subscriptionResolver) Status(ctx context.Context) (<-chan model.SubscriptionStatus, error) {
+	panic(fmt.Errorf("not implemented: Status - status"))
+}
+
+// CreatedAt is the resolver for the createdAt field.
+func (r *subscriptionResolver) CreatedAt(ctx context.Context) (<-chan string, error) {
+	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
+}
+
+// UpdatedAt is the resolver for the updatedAt field.
+func (r *subscriptionResolver) UpdatedAt(ctx context.Context) (<-chan string, error) {
+	panic(fmt.Errorf("not implemented: UpdatedAt - updatedAt"))
 }
 
 // Mutation returns MutationResolver implementation.
@@ -27,5 +152,24 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// Subscription returns SubscriptionResolver implementation.
+func (r *Resolver) Subscription() SubscriptionResolver { return &subscriptionResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+}
+func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+	panic(fmt.Errorf("not implemented: Todos - todos"))
+}
+*/
