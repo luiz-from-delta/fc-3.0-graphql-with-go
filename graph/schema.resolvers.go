@@ -6,14 +6,24 @@ package graph
 
 import (
 	"context"
+	"crypto/rand"
 	"fmt"
+	"math/big"
 
 	"github.com/luiz-from-delta/fc-graphql-with-go/graph/model"
 )
 
 // CreateCourse is the resolver for the createCourse field.
 func (r *mutationResolver) CreateCourse(ctx context.Context, createCourseInput model.CreateCourseInput) (*model.Course, error) {
-	panic(fmt.Errorf("not implemented: CreateCourse - createCourse"))
+	randNumber, _ := rand.Int(rand.Reader, big.NewInt(1000))
+	id := fmt.Sprintf("course-%d", randNumber)
+	course := &model.Course{
+		ID:          id,
+		Name:        createCourseInput.Name,
+		Description: createCourseInput.Description,
+	}
+	r.courses = append(r.courses, course)
+	return course, nil
 }
 
 // UpdateCourse is the resolver for the updateCourse field.
@@ -28,7 +38,15 @@ func (r *mutationResolver) DeleteCourse(ctx context.Context, courseID string) (*
 
 // CreateCategory is the resolver for the createCategory field.
 func (r *mutationResolver) CreateCategory(ctx context.Context, createCategoryInput model.CreateCategoryInput) (*model.Category, error) {
-	panic(fmt.Errorf("not implemented: CreateCategory - createCategory"))
+	randNumber, _ := rand.Int(rand.Reader, big.NewInt(1000))
+	id := fmt.Sprintf("category-%d", randNumber)
+	category := &model.Category{
+		ID:          id,
+		Name:        createCategoryInput.Name,
+		Description: createCategoryInput.Description,
+	}
+	r.categories = append(r.categories, category)
+	return category, nil
 }
 
 // UpdateCategory is the resolver for the updateCategory field.
@@ -73,7 +91,7 @@ func (r *mutationResolver) DeleteSubscription(ctx context.Context, subscriptionI
 
 // ListCourses is the resolver for the listCourses field.
 func (r *queryResolver) ListCourses(ctx context.Context) ([]*model.Course, error) {
-	panic(fmt.Errorf("not implemented: ListCourses - listCourses"))
+	return r.courses, nil
 }
 
 // RetrieveCourseByID is the resolver for the retrieveCourseById field.
@@ -81,14 +99,14 @@ func (r *queryResolver) RetrieveCourseByID(ctx context.Context, courseID string)
 	panic(fmt.Errorf("not implemented: RetrieveCourseByID - retrieveCourseById"))
 }
 
-// ListCourseCategories is the resolver for the listCourseCategories field.
-func (r *queryResolver) ListCourseCategories(ctx context.Context) ([]*model.CourseCategory, error) {
-	panic(fmt.Errorf("not implemented: ListCourseCategories - listCourseCategories"))
+// ListCategories is the resolver for the listCategories field.
+func (r *queryResolver) ListCategories(ctx context.Context) ([]*model.Category, error) {
+	return r.categories, nil
 }
 
-// RetrieveCourseCategoryByID is the resolver for the retrieveCourseCategoryById field.
-func (r *queryResolver) RetrieveCourseCategoryByID(ctx context.Context, courseCategoryID string) (*model.CourseCategory, error) {
-	panic(fmt.Errorf("not implemented: RetrieveCourseCategoryByID - retrieveCourseCategoryById"))
+// RetrieveCategoryByID is the resolver for the retrieveCategoryById field.
+func (r *queryResolver) RetrieveCategoryByID(ctx context.Context, categoryID string) (*model.Category, error) {
+	panic(fmt.Errorf("not implemented: RetrieveCategoryByID - retrieveCategoryById"))
 }
 
 // ListStudents is the resolver for the listStudents field.
@@ -158,18 +176,3 @@ func (r *Resolver) Subscription() SubscriptionResolver { return &subscriptionRes
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type subscriptionResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-/*
-	func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
-}
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
-}
-*/

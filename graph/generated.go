@@ -86,14 +86,14 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		ListCourseCategories       func(childComplexity int) int
-		ListCourses                func(childComplexity int) int
-		ListStudents               func(childComplexity int) int
-		ListSubscriptions          func(childComplexity int) int
-		RetrieveCourseByID         func(childComplexity int, courseID string) int
-		RetrieveCourseCategoryByID func(childComplexity int, courseCategoryID string) int
-		RetrieveStudentByID        func(childComplexity int, studentID string) int
-		RetrieveSubscriptionByID   func(childComplexity int, subscriptionID string) int
+		ListCategories           func(childComplexity int) int
+		ListCourses              func(childComplexity int) int
+		ListStudents             func(childComplexity int) int
+		ListSubscriptions        func(childComplexity int) int
+		RetrieveCategoryByID     func(childComplexity int, categoryID string) int
+		RetrieveCourseByID       func(childComplexity int, courseID string) int
+		RetrieveStudentByID      func(childComplexity int, studentID string) int
+		RetrieveSubscriptionByID func(childComplexity int, subscriptionID string) int
 	}
 
 	Student struct {
@@ -132,8 +132,8 @@ type MutationResolver interface {
 type QueryResolver interface {
 	ListCourses(ctx context.Context) ([]*model.Course, error)
 	RetrieveCourseByID(ctx context.Context, courseID string) (*model.Course, error)
-	ListCourseCategories(ctx context.Context) ([]*model.CourseCategory, error)
-	RetrieveCourseCategoryByID(ctx context.Context, courseCategoryID string) (*model.CourseCategory, error)
+	ListCategories(ctx context.Context) ([]*model.Category, error)
+	RetrieveCategoryByID(ctx context.Context, categoryID string) (*model.Category, error)
 	ListStudents(ctx context.Context) ([]*model.Student, error)
 	RetrieveStudentByID(ctx context.Context, studentID string) (*model.Student, error)
 	ListSubscriptions(ctx context.Context) ([]*model.Subscription, error)
@@ -396,12 +396,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateSubscription(childComplexity, args["subscriptionId"].(string), args["updateSubscriptionInput"].(model.UpdateSubscriptionInput)), true
 
-	case "Query.listCourseCategories":
-		if e.complexity.Query.ListCourseCategories == nil {
+	case "Query.listCategories":
+		if e.complexity.Query.ListCategories == nil {
 			break
 		}
 
-		return e.complexity.Query.ListCourseCategories(childComplexity), true
+		return e.complexity.Query.ListCategories(childComplexity), true
 
 	case "Query.listCourses":
 		if e.complexity.Query.ListCourses == nil {
@@ -424,6 +424,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.ListSubscriptions(childComplexity), true
 
+	case "Query.retrieveCategoryById":
+		if e.complexity.Query.RetrieveCategoryByID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_retrieveCategoryById_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.RetrieveCategoryByID(childComplexity, args["categoryId"].(string)), true
+
 	case "Query.retrieveCourseById":
 		if e.complexity.Query.RetrieveCourseByID == nil {
 			break
@@ -435,18 +447,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.RetrieveCourseByID(childComplexity, args["courseId"].(string)), true
-
-	case "Query.retrieveCourseCategoryById":
-		if e.complexity.Query.RetrieveCourseCategoryByID == nil {
-			break
-		}
-
-		args, err := ec.field_Query_retrieveCourseCategoryById_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.RetrieveCourseCategoryByID(childComplexity, args["courseCategoryId"].(string)), true
 
 	case "Query.retrieveStudentById":
 		if e.complexity.Query.RetrieveStudentByID == nil {
@@ -1076,6 +1076,29 @@ func (ec *executionContext) field_Query___type_argsName(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_retrieveCategoryById_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_retrieveCategoryById_argsCategoryID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["categoryId"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_retrieveCategoryById_argsCategoryID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryId"))
+	if tmp, ok := rawArgs["categoryId"]; ok {
+		return ec.unmarshalNID2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_retrieveCourseById_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -1092,29 +1115,6 @@ func (ec *executionContext) field_Query_retrieveCourseById_argsCourseID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("courseId"))
 	if tmp, ok := rawArgs["courseId"]; ok {
-		return ec.unmarshalNID2string(ctx, tmp)
-	}
-
-	var zeroVal string
-	return zeroVal, nil
-}
-
-func (ec *executionContext) field_Query_retrieveCourseCategoryById_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
-	var err error
-	args := map[string]any{}
-	arg0, err := ec.field_Query_retrieveCourseCategoryById_argsCourseCategoryID(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["courseCategoryId"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Query_retrieveCourseCategoryById_argsCourseCategoryID(
-	ctx context.Context,
-	rawArgs map[string]any,
-) (string, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("courseCategoryId"))
-	if tmp, ok := rawArgs["courseCategoryId"]; ok {
 		return ec.unmarshalNID2string(ctx, tmp)
 	}
 
@@ -2629,8 +2629,8 @@ func (ec *executionContext) fieldContext_Query_retrieveCourseById(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_listCourseCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_listCourseCategories(ctx, field)
+func (ec *executionContext) _Query_listCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_listCategories(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2643,7 +2643,7 @@ func (ec *executionContext) _Query_listCourseCategories(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ListCourseCategories(rctx)
+		return ec.resolvers.Query().ListCategories(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2655,12 +2655,12 @@ func (ec *executionContext) _Query_listCourseCategories(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.CourseCategory)
+	res := resTmp.([]*model.Category)
 	fc.Result = res
-	return ec.marshalNCourseCategory2ᚕᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCourseCategoryᚄ(ctx, field.Selections, res)
+	return ec.marshalNCategory2ᚕᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_listCourseCategories(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_listCategories(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2668,23 +2668,23 @@ func (ec *executionContext) fieldContext_Query_listCourseCategories(_ context.Co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "courseId":
-				return ec.fieldContext_CourseCategory_courseId(ctx, field)
-			case "course":
-				return ec.fieldContext_CourseCategory_course(ctx, field)
-			case "categoryId":
-				return ec.fieldContext_CourseCategory_categoryId(ctx, field)
-			case "category":
-				return ec.fieldContext_CourseCategory_category(ctx, field)
+			case "id":
+				return ec.fieldContext_Category_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Category_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Category_description(ctx, field)
+			case "courseCategories":
+				return ec.fieldContext_Category_courseCategories(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type CourseCategory", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_retrieveCourseCategoryById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_retrieveCourseCategoryById(ctx, field)
+func (ec *executionContext) _Query_retrieveCategoryById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_retrieveCategoryById(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2697,7 +2697,7 @@ func (ec *executionContext) _Query_retrieveCourseCategoryById(ctx context.Contex
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RetrieveCourseCategoryByID(rctx, fc.Args["courseCategoryId"].(string))
+		return ec.resolvers.Query().RetrieveCategoryByID(rctx, fc.Args["categoryId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2706,12 +2706,12 @@ func (ec *executionContext) _Query_retrieveCourseCategoryById(ctx context.Contex
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.CourseCategory)
+	res := resTmp.(*model.Category)
 	fc.Result = res
-	return ec.marshalOCourseCategory2ᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCourseCategory(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCategory(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_retrieveCourseCategoryById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_retrieveCategoryById(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2719,16 +2719,16 @@ func (ec *executionContext) fieldContext_Query_retrieveCourseCategoryById(ctx co
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "courseId":
-				return ec.fieldContext_CourseCategory_courseId(ctx, field)
-			case "course":
-				return ec.fieldContext_CourseCategory_course(ctx, field)
-			case "categoryId":
-				return ec.fieldContext_CourseCategory_categoryId(ctx, field)
-			case "category":
-				return ec.fieldContext_CourseCategory_category(ctx, field)
+			case "id":
+				return ec.fieldContext_Category_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Category_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Category_description(ctx, field)
+			case "courseCategories":
+				return ec.fieldContext_Category_courseCategories(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type CourseCategory", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	defer func() {
@@ -2738,7 +2738,7 @@ func (ec *executionContext) fieldContext_Query_retrieveCourseCategoryById(ctx co
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_retrieveCourseCategoryById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_retrieveCategoryById_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -6120,7 +6120,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "listCourseCategories":
+		case "listCategories":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6129,7 +6129,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_listCourseCategories(ctx, field)
+				res = ec._Query_listCategories(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6142,7 +6142,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "retrieveCourseCategoryById":
+		case "retrieveCategoryById":
 			field := field
 
 			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6151,7 +6151,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_retrieveCourseCategoryById(ctx, field)
+				res = ec._Query_retrieveCategoryById(ctx, field)
 				return res
 			}
 
@@ -6704,6 +6704,60 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNCategory2ᚕᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Category) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCategory2ᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCategory(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCategory2ᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Category(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCourse2ᚕᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCourseᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Course) graphql.Marshaler {
@@ -7294,13 +7348,6 @@ func (ec *executionContext) marshalOCourse2ᚖgithubᚗcomᚋluizᚑfromᚑdelta
 		return graphql.Null
 	}
 	return ec._Course(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOCourseCategory2ᚖgithubᚗcomᚋluizᚑfromᚑdeltaᚋfcᚑgraphqlᚑwithᚑgoᚋgraphᚋmodelᚐCourseCategory(ctx context.Context, sel ast.SelectionSet, v *model.CourseCategory) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._CourseCategory(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚕstringᚄ(ctx context.Context, v any) ([]string, error) {
