@@ -17,11 +17,22 @@ import (
 func (r *mutationResolver) CreateCourse(ctx context.Context, createCourseInput model.CreateCourseInput) (*model.Course, error) {
 	randNumber, _ := rand.Int(rand.Reader, big.NewInt(1000))
 	id := fmt.Sprintf("course-%d", randNumber)
-	course := &model.Course{
-		ID:          id,
-		Name:        createCourseInput.Name,
-		Description: createCourseInput.Description,
+
+	var courseCategories []*model.CourseCategory
+	for _, categoryID := range createCourseInput.Categories {
+		courseCategories = append(courseCategories, &model.CourseCategory{
+			CourseID:   id,
+			CategoryID: categoryID,
+		})
 	}
+
+	course := &model.Course{
+		ID:               id,
+		Name:             createCourseInput.Name,
+		Description:      createCourseInput.Description,
+		CourseCategories: courseCategories,
+	}
+
 	r.courses = append(r.courses, course)
 	return course, nil
 }
@@ -40,11 +51,22 @@ func (r *mutationResolver) DeleteCourse(ctx context.Context, courseID string) (*
 func (r *mutationResolver) CreateCategory(ctx context.Context, createCategoryInput model.CreateCategoryInput) (*model.Category, error) {
 	randNumber, _ := rand.Int(rand.Reader, big.NewInt(1000))
 	id := fmt.Sprintf("category-%d", randNumber)
-	category := &model.Category{
-		ID:          id,
-		Name:        createCategoryInput.Name,
-		Description: createCategoryInput.Description,
+
+	var courseCategories []*model.CourseCategory
+	for _, courseID := range createCategoryInput.Courses {
+		courseCategories = append(courseCategories, &model.CourseCategory{
+			CourseID:   courseID,
+			CategoryID: id,
+		})
 	}
+
+	category := &model.Category{
+		ID:               id,
+		Name:             createCategoryInput.Name,
+		Description:      createCategoryInput.Description,
+		CourseCategories: courseCategories,
+	}
+
 	r.categories = append(r.categories, category)
 	return category, nil
 }
